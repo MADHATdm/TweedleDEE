@@ -26,7 +26,7 @@ def upperDefaults(filename):
     default = loadYAML(filename)
     default = {key.upper(): value for key, value in default.items()}
     filename = filename.split('/')[-1]
-    saveYAML('Upper' + filename, default)
+    saveYAML('config/Upper' + filename, default)
 
 def setup_config_yaml(dwarf, catalog='gll_psc_v32.fit', year='2023'):
     '''Setup the config yaml file for the dwarf galaxy to be used with runGTA().
@@ -46,14 +46,11 @@ def setup_config_yaml(dwarf, catalog='gll_psc_v32.fit', year='2023'):
     '''  
     cwd = os.getcwd()
     os.chdir('../..')
-    try:
+    if os.path.exists(f'config/Upperdefaults{year}.yaml'):
         default = loadYAML(f'config/Upperdefaults{year}.yaml')
         config = loadYAML('config/config.yaml')
-    except FileNotFoundError:
-        try:
-            upperDefaults(f'config/defaults{year}.yaml')
-        except FileNotFoundError:
-            raise FileNotFoundError(f'config/defaults{year}.yaml not found.')
+    else:
+        upperDefaults(f'config/defaults{year}.yaml')
         default = loadYAML(f'config/Upperdefaults{year}.yaml')
         config = loadYAML('config/config.yaml')
 

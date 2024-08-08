@@ -42,7 +42,6 @@ def update_exposures(dwarf, pmf):
     '''Update the exposures file with the new data.'''
     dwarfs, IDs = pmf.get_dwarfs()
     if dwarf not in dwarfs:
-        print(f'{dwarf} not in dwarfs.')
         if os.path.exists('PMFdata/Exposures_updated.tsv'):
             with open('PMFdata/Exposures_updated.tsv', 'a') as file:
                 file.write(f'{dwarf}\t{analyze_data(dwarf)}\n')
@@ -62,7 +61,6 @@ def get_new_ID(file_path):
 def update_IDs(dwarf, pmf):  
     dwarfs, IDs = pmf.get_dwarfs()
     if dwarf not in dwarfs:
-        print(f'{dwarf} not in dwarfs.')
         if os.path.exists('PMFdata/IDs_updated.tsv'):
             with open('PMFdata/IDs_updated.tsv', 'a') as file:
                 new_ID = get_new_ID('PMFdata/IDs_updated.tsv')
@@ -81,7 +79,7 @@ def main():
     source_info_file = 'gll_psc_v32.fit'
     defaults = True
 
-    # configure_input_files(catalog=source_info_file, defaults=defaults) 
+    configure_input_files(catalog=source_info_file, defaults=defaults) 
     
     # Set the random seed for reproducibility (only needed if you want to reproduce the results)
     np.random.seed(34285972)
