@@ -6,7 +6,7 @@ If you use TweedleDEE please cite:
 
 
 # The TweedleDEE Wiki Contains:
-[Setting Up TweedleDEE](https://github.com/MADHATdm/TweedleDEE/wiki/Setting-Up-TweedleDEE)
-[Fermi-LAT Data Queries](https://github.com/MADHATdm/TweedleDEE/wiki/Fermi%E2%80%90LAT-Data-Queries)
-[Running TweedleDEE](https://github.com/MADHATdm/TweedleDEE/wiki/Running-TweedleDEE)
-[Output Formatting](https://github.com/MADHATdm/TweedleDEE/wiki/Output-Formatting)
+- [Setting Up TweedleDEE](https://github.com/MADHATdm/TweedleDEE/wiki/Setting-Up-TweedleDEE)
+- [Fermi-LAT Data Queries](https://github.com/MADHATdm/TweedleDEE/wiki/Fermi%E2%80%90LAT-Data-Queries)
+- [Running TweedleDEE](https://github.com/MADHATdm/TweedleDEE/wiki/Running-TweedleDEE)
+- [Output Formatting](https://github.com/MADHATdm/TweedleDEE/wiki/Output-Formatting)
