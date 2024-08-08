@@ -1,0 +1,10 @@
+# ############################################################
+#         # MADHAT (Model-Agnostic Dark Halo Analysis Tool) Fermi NOBS
+#         # Ref: Atwood et al. [Fermi-LAT] [arXiv:0902.1089]; P. Bruel et al. [Fermi-LAT] [arXiv:1810.11394]
+#         #
+#         # Column 1: ID# of the dwarf galaxy
+#         # Column 2: current energy bin# (increases with energy of bin, with 8bpd energy bins)
+#         # Column 3: number of observed photons, N_O_ij
+#         # Column 4: exposure = average effective area (A_eff) multiplied by observation time (T_obs)
+#         ###########################################################
+94	1	143	613376327680
