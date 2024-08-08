@@ -94,13 +94,16 @@ def get_source_catalog(catalog='gll_psc_v32.fit'):
     else:
         print(f"Failed to download file. Status code: {response.status_code}")
 
-def configure_input_files(catalog='gll_psc_v32.fit'):
+def configure_input_files(catalog='gll_psc_v32.fit', defaults=True):
     """
     Iterate over all subdirectories in the base directory and create events.txt
     file for directories containing files matching the pattern *PH*.fits.
     """
     base_dir = os.getcwd()
     get_source_catalog(catalog)
+
+    if not os.path.exists('input/'):
+        os.makedirs('input/')
     
     os.chdir('input/')
     for dir in os.listdir('.'):      
@@ -108,7 +111,9 @@ def configure_input_files(catalog='gll_psc_v32.fit'):
             dwarf = os.path.basename(dir)
             print(f"Processing {dwarf}...")
             os.chdir(dir)
-            setup_config_yaml(dwarf, catalog)
+
+            if defaults:
+                setup_config_yaml(dwarf, catalog)
             
             fits_files = glob.glob('*PH*.fits')
             if fits_files:

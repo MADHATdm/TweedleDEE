@@ -3,7 +3,9 @@ import numpy as np
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
-import astropy.io.fits as fits  
+import astropy.io.fits as fits
+
+from configSetup import get_source_catalog
 
 class FDError(Exception):
     '''Custom exception class for file and data errors.'''
@@ -11,7 +13,7 @@ class FDError(Exception):
         super().__init__(message)
 
 class createPMF:
-    def __init__(self, Nsample, target_size, sample_size, source_size, binning, dwarf_files_dir, IDs_filepath):
+    def __init__(self, Nsample, target_size, sample_size, source_size, binning, dwarf_files_dir, IDs_filepath, source_info_file):
         self.Nsample = Nsample
         self.target_size = target_size
         self.sample_size = sample_size
@@ -25,9 +27,13 @@ class createPMF:
         
         self.dwarf_files_dir = dwarf_files_dir
         self.IDs_filepath = IDs_filepath 
+        self.source_info_filepath = source_info_file
 
     def get_dwarfs(self):
         '''Get the dwarf names and IDs from the IDs file.'''
+        if not os.path.isfile(self.IDs_filepath):
+            raise FDError(f'No such file {self.IDs_filepath}.')
+        
         with open(self.IDs_filepath, "r") as IDs_file:
             next(IDs_file) # Skip the header
             lines = [line.strip().split() for line in IDs_file if line.strip()]
@@ -63,10 +69,9 @@ class createPMF:
 
     def get_source_coords(self, target_coords):
         """ Return SkyCoord object for catalog point sources. """
-        source_info_filepath = "gll_psc_v32.fit"
-        if not os.path.isfile(source_info_filepath):
-            raise FDError(f'No such point source file {source_info_filepath}.')
-        with fits.open(source_info_filepath) as sfile:
+        if not os.path.isfile(self.source_info_filepath):
+            get_source_catalog(self.source_info_filepath)
+        with fits.open(self.source_info_filepath) as sfile:
             ra  = sfile[1].data['RAJ2000']
             dec = sfile[1].data['DEJ2000']
         sources = SkyCoord(ra=ra,dec=dec,unit='deg',frame='icrs')
