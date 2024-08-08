@@ -1,0 +1,70 @@
+# Hercules test, config file
+
+logging : 
+
+  verbosity : 3
+
+data:
+
+  evfile: events.txt # list created from photon files
+  scfile: L240704115605F19F314095_SC00.fits 
+  ltcube : null
+
+
+binning:
+
+  # Binning
+  roiwidth   : 20.0
+  npix       : null
+  binsz      : 0.05
+  # spatial bin size in deg
+  binsperdec : 8   # nb energy bins per decade
+  coordsys   : 'GAL'
+
+selection:
+
+  # Data selections
+  # gtselect parameters
+  emin    : 1000
+  emax    : 100000
+  zmax    : 100
+  evclass : 128
+  evtype  : 3
+  tmin    : 239557417 
+  tmax    : 681169985 
+
+  # gtmktime parameters
+  filter  : 'DATA_QUAL>0 && LAT_CONFIG==1'
+
+  # Set the ROI center to these coordinates, corresponding to each source
+  ra:  247.7722
+  dec: 12.7852
+
+
+gtlike:
+  # IRFs
+  edisp : True
+  irfs : 'P8R3_SOURCE_V3'
+  edisp_disable : ['isodiff','galdiff']
+
+  # Settings for ROI model
+model:
+
+  # Include catalog sources within this distance from the ROI center
+  src_radius  : 10 
+
+  # Include catalog sources within a box of width roisrc.
+  #src_roiwidth : 20 #15.0
+
+  galdiff  : '$FERMI_DIFFUSE_DIR/gll_iem_v07.fits'
+  isodiff  : '$FERMI_DIFFUSE_DIR/iso_P8R3_SOURCE_V3_v1.txt'
+
+  # List of catalogs to be used in the model.
+  catalogs : 
+    - 'gll_psc_v32.fit'
+
+fileio:
+  # File I/O
+  outdir : 'output'
+
+components: null
