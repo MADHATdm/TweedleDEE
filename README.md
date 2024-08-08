@@ -7,9 +7,11 @@ If you use TweedleDEE please cite:
 
 # The TweedleDEE Wiki Contains:
 - [Home](https://github.com/MADHATdm/TweedleDEE/wiki)
-- [Setting Up TweedleDEE](https://github.com/MADHATdm/TweedleDEE/wiki/Setting-Up-TweedleDEE)
+- [Installing TweedleDEE Dependencies](https://github.com/MADHATdm/TweedleDEE/wiki/Installing-TweedleDEE-Dependencies)
+- [Initializing TweedleDEE](https://github.com/MADHATdm/TweedleDEE/wiki/Initializing-TweedleDEE)
 - [Fermi-LAT Data Queries](https://github.com/MADHATdm/TweedleDEE/wiki/Fermi%E2%80%90LAT-Data-Queries)
 - [Running TweedleDEE](https://github.com/MADHATdm/TweedleDEE/wiki/Running-TweedleDEE)
 - [Output Formatting](https://github.com/MADHATdm/TweedleDEE/wiki/Output-Formatting)
 
+Note: The current version of the code does not stack PMFs for multiple objects.
 Note: This repo is under construction
