@@ -31,7 +31,7 @@ def analyze_data(dwarf):
         # Slice for the middle
         data = bexpmap_roi[0].data[:,189:209,189:209]
 
-        # Calculate the exposure (NEED REFERENCE)
+        # Calculate the exposure
         numpy2=(1/16)*np.sum(data,0)
         numpy3=(1/20)*np.sum(numpy2,0)
         numpy4=(1/20)*np.sum(numpy3,0) #exposure
@@ -67,7 +67,7 @@ def parallelize(dwarf):
 
 def main():
     # Setup input files (events.txt and config.yaml) for all dwarf galaxies 
-    # configure_input_files(catalog='gll_psc_v32.fit', True) # Set False to not retrieve the IDs and Exposures files from MADHAT
+    configure_input_files(catalog='gll_psc_v32.fit', True) # Set False to not retrieve the IDs and Exposures files from MADHAT
     
     # Set the random seed for reproducibility (only needed if you want to reproduce the results)
     np.random.seed(34285972)
@@ -82,24 +82,24 @@ def main():
     sample_size = 0.5 #This is the radius of each sample region in degrees
     source_size = 0.8 #This is the radius of each point source's exclusionary region in degrees
 
-    # Initialize the PMF object (used for calculating the PMF and NOBS)
-    pmf = createPMF(Nsample, target_size, sample_size, source_size, binning, dwarf_files_dir, IDs_filepath)
+    # # Initialize the PMF object (used for calculating the PMF and NOBS)
+    # pmf = createPMF(Nsample, target_size, sample_size, source_size, binning, dwarf_files_dir, IDs_filepath)
 
-    # Get the list of dwarf galaxies and their IDs (From MADHAT GitHub: https://github.com/MADHATdm/MADHATv2/wiki/Dwarf-ID-Numbers)
-    dwarfs, IDs = pmf.get_dwarfs() # Would use this to run the GTAnalysis on all dwarf galaxies
+    # # Get the list of dwarf galaxies and their IDs (From MADHAT GitHub: https://github.com/MADHATdm/MADHATv2/wiki/Dwarf-ID-Numbers)
+    # dwarfs, IDs = pmf.get_dwarfs() # Would use this to run the GTAnalysis on all dwarf galaxies
 
-    # If using a single dwarf galaxy, set the dwarf galaxy name here
-    dwarf = 'LEO_VI'
+    # # If using a single dwarf galaxy, set the dwarf galaxy name here
+    # dwarf = 'LEO_VI'
 
-    # Running the GTAnalysis on the a single dwarf galaxy (Note: This can take a few hours to complete)
-    runGTA(dwarf)
+    # # Running the GTAnalysis on the a single dwarf galaxy (Note: This can take a few hours to complete)
+    # runGTA(dwarf)
 
-    update_exposures(dwarf) # Update the exposures file (to be used in the PMF creation)
-    update_IDs(dwarf) # Update the IDs file (to be used in the PMF creation)
+    # update_exposures(dwarf) # Update the exposures file (to be used in the PMF creation)
+    # update_IDs(dwarf) # Update the IDs file (to be used in the PMF creation)
 
-    # Example of how to generate the PMF for a single dwarf galaxy
-    pmf.generate_PMF(dwarf)
-    pmf.generate_NOBS(dwarf)
+    # # Example of how to generate the PMF for a single dwarf galaxy
+    # pmf.generate_PMF(dwarf)
+    # pmf.generate_NOBS(dwarf)
     
     # # Uncomment to run the GTAnalysis on the dwarf galaxies in parallel (max_workers sets the number of processes, i.e. cores to use)
     # with ProcessPoolExecutor(max_workers=4) as executor:
