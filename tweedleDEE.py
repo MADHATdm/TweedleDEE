@@ -39,6 +39,8 @@ def analyze_data(dwarf):
     return numpy4
 
 def update_exposures(dwarf):
+    '''This function updates the exposures file for the dwarf galaxies. Or creates
+    the file if it does not exist.'''
     Aeff = analyze_data(dwarf)
 
     if 'PMFdata/Exposures_updated.tsv' not in os.listdir():
@@ -50,6 +52,8 @@ def update_exposures(dwarf):
             file.write(f'{dwarf}\t{Aeff}\n')
 
 def update_IDs(dwarf):
+    '''This function updates the IDs file for the dwarf galaxies. Or creates
+    the file if it does not exist.'''
     def count_lines(filename):
         with open(filename) as file:
             return len(file.readlines())
@@ -67,8 +71,7 @@ def parallelize(dwarf):
 
 def main():
     # Setup input files (events.txt and config.yaml) for all dwarf galaxies 
-    configure_input_files(catalog='gll_psc_v32.fit', True) # Set False to not retrieve the IDs and Exposures files from MADHAT
-    
+    configure_input_files(catalog='gll_psc_v32.fit')
     # Set the random seed for reproducibility (only needed if you want to reproduce the results)
     np.random.seed(34285972)
 

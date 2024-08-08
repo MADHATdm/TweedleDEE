@@ -94,29 +94,7 @@ def get_source_catalog(catalog='gll_psc_v32.fit'):
     else:
         print(f"Failed to download file. Status code: {response.status_code}")
 
-def get_IDs_updated():
-    '''Get the IDs_updated.tsv file.'''
-    response = requests.get('https:...../PMFdata/IDs_updated.tsv')
-    if response.status_code == 200:
-        with open('IDs_updated.tsv', 'wb') as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                f.write(chunk)
-        print("IDs_updated.tsv downloaded.")
-    else:
-        print(f"Failed to download file. Status code: {response.status_code}")
-
-def get_Exposures_updated():
-    '''Get the Exposures_updated.tsv file.'''
-    response = requests.get('https:...../PMFdata/Exposures_updated.tsv')
-    if response.status_code == 200:
-        with open('Exposures_updated.tsv', 'wb') as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                f.write(chunk)
-        print("Exposures_updated.tsv downloaded.")
-    else:
-        print(f"Failed to download file. Status code: {response.status_code}")
-
-def configure_input_files(catalog='gll_psc_v32.fit', get_IDs=False):
+def configure_input_files(catalog='gll_psc_v32.fit'):
     """
     Iterate over all subdirectories in the base directory and create events.txt
     file for directories containing files matching the pattern *PH*.fits.
@@ -124,10 +102,6 @@ def configure_input_files(catalog='gll_psc_v32.fit', get_IDs=False):
     base_dir = os.getcwd()
     get_source_catalog(catalog)
     
-    if get_IDs:
-        get_IDs_updated()
-        get_Exposures_updated()
-
     os.chdir('input/')
     for dir in os.listdir('.'):      
         if os.path.isdir(dir):
