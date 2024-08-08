@@ -93,7 +93,7 @@ def main():
 
     # Running the GTAnalysis on the a single dwarf galaxy (Note: This can take a few hours to complete)
     runGTA(dwarf)
-    #TODO: Check update_exposures and update_IDs functions
+
     update_exposures(dwarf) # Update the exposures file (to be used in the PMF creation)
     update_IDs(dwarf) # Update the IDs file (to be used in the PMF creation)
 

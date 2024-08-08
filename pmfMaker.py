@@ -3,9 +3,7 @@ import numpy as np
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
-import astropy.io.fits as fits
-
-#TODO: Check where filepaths and directories are    
+import astropy.io.fits as fits  
 
 class FDError(Exception):
     '''Custom exception class for file and data errors.'''
