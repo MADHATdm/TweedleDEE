@@ -42,30 +42,35 @@ def update_exposures(dwarf, pmf):
     '''Update the exposures file with the new data.'''
     dwarfs, IDs = pmf.get_dwarfs()
     if dwarf not in dwarfs:
-        Aeff = analyze_data(dwarf)
-
-        if 'PMFdata/Exposures_updated.tsv' not in os.listdir():
-            with open('PMFdata/Exposures_updated.tsv', 'w') as file:
-                file.write(f'{dwarf}\t{Aeff}\n')
-        else:
-            # Open Exposures_updated.tsv
+        print(f'{dwarf} not in dwarfs.')
+        if os.path.exists('PMFdata/Exposures_updated.tsv'):
             with open('PMFdata/Exposures_updated.tsv', 'a') as file:
-                file.write(f'{dwarf}\t{Aeff}\n')
+                file.write(f'{dwarf}\t{analyze_data(dwarf)}\n')
+                print(f'{dwarf} added to Exposures_updated.tsv.')
+        else:
+            with open('PMFdata/Exposures_updated.tsv', 'w') as file:
+                file.write(f'Name\tExposure\n')
+                file.write(f'{dwarf}\t{analyze_data(dwarf)}\n')
 
-def update_IDs(dwarf, pmf):
-    def count_lines(filename):
-        with open(filename) as file:
-            return len(file.readlines())
-        
+def get_new_ID(file_path):
+    '''Get the new ID from the file.'''
+    with open(file_path, 'r') as file:
+        data = file.readlines()
+        new_ID = data[-1].split('\t')[0]
+    return int(new_ID) + 1
+
+def update_IDs(dwarf, pmf):  
     dwarfs, IDs = pmf.get_dwarfs()
     if dwarf not in dwarfs:
-        if 'PMFdata/IDs_updated.tsv' not in os.listdir():
-            with open('PMFdata/IDs_updated.tsv', 'w') as file:
-                file.write(f'{dwarf}\t{1}\n')
-        else:
-            # Open IDs_updated.tsv
+        print(f'{dwarf} not in dwarfs.')
+        if os.path.exists('PMFdata/IDs_updated.tsv'):
             with open('PMFdata/IDs_updated.tsv', 'a') as file:
-                file.write(f'{dwarf}\t{count_lines('PMFdata/IDs_updated') - 1}\n')
+                new_ID = get_new_ID('PMFdata/IDs_updated.tsv')
+                file.write(f'{new_ID}\t{dwarf}\n')
+        else:
+            with open('PMFdata/IDs_updated.tsv', 'w') as file:
+                file.write(f'#ID\tDwarf Name\n')
+                file.write(f'1\t{dwarf}\n')
 
 def parallelize(dwarf):
     '''Parallelize the data analysis for the dwarf galaxies.'''
@@ -76,7 +81,7 @@ def main():
     source_info_file = 'gll_psc_v32.fit'
     defaults = True
 
-    configure_input_files(catalog=source_info_file, defaults=defaults) 
+    # configure_input_files(catalog=source_info_file, defaults=defaults) 
     
     # Set the random seed for reproducibility (only needed if you want to reproduce the results)
     np.random.seed(34285972)
@@ -91,29 +96,29 @@ def main():
     sample_size = 0.5 #This is the radius of each sample region in degrees
     source_size = 0.8 #This is the radius of each point source's exclusionary region in degrees
 
-    # Initialize the PMF object (used for calculating the PMF and NOBS)
-    pmf = createPMF(Nsample, target_size, sample_size, source_size, binning, dwarf_files_dir, IDs_filepath, source_info_file)
+    # # Initialize the PMF object (used for calculating the PMF and NOBS)
+    # pmf = createPMF(Nsample, target_size, sample_size, source_size, binning, dwarf_files_dir, IDs_filepath, source_info_file)
 
-    # Get the list of dwarf galaxies and their IDs (From MADHAT GitHub: https://github.com/MADHATdm/MADHATv2/wiki/Dwarf-ID-Numbers)
-    dwarfs, IDs = pmf.get_dwarfs() # Would use this to run the GTAnalysis on all dwarf galaxies
+    # # Get the list of dwarf galaxies and their IDs (From MADHAT GitHub: https://github.com/MADHATdm/MADHATv2/wiki/Dwarf-ID-Numbers)
+    # dwarfs, IDs = pmf.get_dwarfs() # Would use this to run the GTAnalysis on all dwarf galaxies
 
-    # If using a single dwarf galaxy, set the dwarf galaxy name here
-    dwarf = 'LEO_VI'
+    # # If using a single dwarf galaxy, set the dwarf galaxy name here
+    # dwarf = 'LEO_VI'
 
-    # Running the GTAnalysis on the a single dwarf galaxy (Note: This can take a few hours to complete)
-    runGTA(dwarf)
+    # # Running the GTAnalysis on the a single dwarf galaxy (Note: This can take a few hours to complete)
+    # runGTA(dwarf)
 
-    update_exposures(dwarf, pmf) # Update the exposures file (to be used in the PMF creation)
-    update_IDs(dwarf, pmf) # Update the IDs file (to be used in the PMF creation)
+    # # Note: The order of the following functions is important
+    # update_exposures(dwarf, pmf) # Update the exposures file (to be used in the PMF creation)
+    # update_IDs(dwarf, pmf) # Update the IDs file (to be used in the PMF creation)
 
-    # Example of how to generate the PMF for a single dwarf galaxy
-    pmf.generate_PMF(dwarf)
-    pmf.generate_NOBS(dwarf)
+    # # Example of how to generate the PMF for a single dwarf galaxy
+    # pmf.generate_PMF(dwarf)
+    # pmf.generate_NOBS(dwarf)
     
     # # Uncomment to run the GTAnalysis on the dwarf galaxies in parallel (max_workers sets the number of processes, i.e. cores to use)
     # with ProcessPoolExecutor(max_workers=4) as executor:
     #     executor.map(parallelize, dwarfs)
 
-       
 if __name__ == "__main__":
     main()
