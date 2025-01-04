@@ -5,7 +5,7 @@ from astropy import units as u
 from astropy.coordinates import SkyCoord
 import astropy.io.fits as fits
 
-from configSetup import get_source_catalog
+from configSetup import get_catalogs
 
 class FDError(Exception):
     '''Custom exception class for file and data errors.'''
@@ -70,7 +70,7 @@ class createPMF:
     def get_source_coords(self, target_coords):
         """ Return SkyCoord object for catalog point sources. """
         if not os.path.isfile(self.source_info_filepath):
-            get_source_catalog(self.source_info_filepath)
+            get_catalogs(self.source_info_filepath, False)
         with fits.open(self.source_info_filepath) as sfile:
             ra  = sfile[1].data['RAJ2000']
             dec = sfile[1].data['DEJ2000']

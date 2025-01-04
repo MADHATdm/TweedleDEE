@@ -76,28 +76,40 @@ def setup_config_yaml(dwarf, catalog='gll_psc_v32.fit', year='2023'):
     print(f'{dwarf}.yaml saved.')
     os.chdir(cwd)
 
-def get_source_catalog(catalog='gll_psc_v32.fit'):
-    '''Download the Fermi-LAT 4FGL catalog.'''
+def get_file(filename, url):
     # Send a GET request to the URL
-    response = requests.get(f'https://fermi.gsfc.nasa.gov/ssc/data/access/lat/14yr_catalog/{catalog}', stream=True)
+    response = requests.get(url, stream=True)
     # Check if the request was successful
     if response.status_code == 200:
         # Open a local file in binary write mode
-        with open(catalog, 'wb') as f:
+        with open(filename, 'wb') as f:
             # Write the content of the response to the file in chunks
             for chunk in response.iter_content(chunk_size=8192):
                 f.write(chunk)
-        print(f"Source catalog: {catalog} downloaded.")
+        print(f"{filename} downloaded.")
     else:
         print(f"Failed to download file. Status code: {response.status_code}")
 
-def configure_input_files(catalog='gll_psc_v32.fit', defaults=True):
+def get_catalogs(catalog='gll_psc_v32.fit', defaults=True, year='2023'):
+    '''Download the Fermi-LAT 4FGL catalog and defaults if True.'''
+    cwd = os.getcwd()
+
+    if not os.path.exists(catalog):
+        get_file(catalog, f'https://fermi.gsfc.nasa.gov/ssc/data/access/lat/14yr_catalog/{catalog}')
+
+    if not os.path.exists(f'config/defaults{year}.yaml') and defaults:
+        os.chdir('config/')
+        get_file(f'defaults{year}.yaml', f'https://github.com/fermiPy/dmsky/blob/master/dmsky/data/targets/dwarfs/defaults{year}.yaml')
+
+    os.chdir(cwd)
+
+def configure_input_files(catalog='gll_psc_v32.fit', defaults=True, year='2023'):
     """
     Iterate over all subdirectories in the base directory and create events.txt
     file for directories containing files matching the pattern *PH*.fits.
     """
     base_dir = os.getcwd()
-    get_source_catalog(catalog)
+    get_catalogs(catalog, defaults, year)
 
     if not os.path.exists('input/'):
         os.makedirs('input/')

@@ -1,7 +1,11 @@
 output/
 input/
+__pycache__/
 
 *.txt
 *.log
 *.csv
 *.py
+*.fit
+*.fits
+*.yaml
