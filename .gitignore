@@ -1,0 +1,7 @@
+output/
+input/
+
+*.txt
+*.log
+*.csv
+*.py
