@@ -1,70 +1,151 @@
-# Hercules test, config file
+# FermiPy GTAnalysis Configuration
+# ===========================================
+# This file configures the FermiPy ROI analysis workflow.
+#
+# Reference:
+#   https://fermipy.readthedocs.io/en/latest/config.html
+#
+# Notes:
+#   - Values in this file are used by GTAnalysis(...).
+#   - Most options are optional in FermiPy and fall back to defaults.
+#   - Keep paths relative to the run directory unless absolute paths are needed.
 
-logging : 
+# ---------------------------------------------------------------------
+# LOGGING
+# ---------------------------------------------------------------------
 
-  verbosity : 3
+logging:
+  verbosity: 3
+  # FermiPy/Fermitools log verbosity level.
+
+
+# ---------------------------------------------------------------------
+# DATA INPUTS
+# ---------------------------------------------------------------------
 
 data:
+  evfile: events.txt
+  # FT1 event file OR a text list of FT1 files.
 
-  evfile: events.txt # list created from photon files
-  scfile: L240704115605F19F314095_SC00.fits 
-  ltcube : null
+  scfile: L240704115605F19F314095_SC00.fits
+  # FT2 spacecraft file.
 
+  ltcube: null
+  # Livetime cube path. If null, FermiPy will generate one.
+
+
+# ---------------------------------------------------------------------
+# BINNING (Spatial + Energy)
+# ---------------------------------------------------------------------
 
 binning:
+  roiwidth: 20.0
+  # Width of ROI in degrees.
 
-  # Binning
-  roiwidth   : 20.0
-  npix       : null
-  binsz      : 0.05
-  # spatial bin size in deg
-  binsperdec : 8   # nb energy bins per decade
-  coordsys   : 'GAL'
+  npix: null
+  # Number of spatial pixels per axis.
+  # If null, inferred from roiwidth / binsz.
+
+  binsz: 0.05
+  # Spatial pixel size in degrees.
+
+  binsperdec: 8
+  # Number of energy bins per decade.
+
+  coordsys: 'CEL'
+  # Coordinate system for WCS projection (CEL or GAL).
+
+
+# ---------------------------------------------------------------------
+# EVENT SELECTION
+# ---------------------------------------------------------------------
 
 selection:
-
-  # Data selections
   # gtselect parameters
-  emin    : 1000
-  emax    : 100000
-  zmax    : 100
-  evclass : 128
-  evtype  : 3
-  tmin    : 239557417 
-  tmax    : 681169985 
+  emin: 1000
+  # Minimum energy in MeV.
+
+  emax: 100000
+  # Maximum energy in MeV.
+
+  zmax: 90
+  # Maximum zenith angle (deg).
+  # Check https://fermi.gsfc.nasa.gov/ssc/data/analysis/scitools/lat_data_selection.html for recommended values.
+
+  evclass: 128
+  # Event class (Pass 8 SOURCE).
+
+  evtype: 3
+  # Event type selection.
+
+  tmin: 239557417
+  # Start time in MET.
+
+  tmax: 681169985
+  # End time in MET.
+
+  radius: 15.0
+  # Radius of event extraction region in degrees.
+  # This is the circular region around the target position from which events are selected.
+  # Should use a radius large enough to encompass the square roiwidth.
 
   # gtmktime parameters
-  filter  : 'DATA_QUAL>0 && LAT_CONFIG==1'
+  filter: 'DATA_QUAL>0 && LAT_CONFIG==1'
+  # Standard good-time interval filter.
 
-  # Set the ROI center to these coordinates, corresponding to each source
-  ra:  247.7722
+  # ROI center coordinates
+  ra: 247.7722
   dec: 12.7852
 
 
+# ---------------------------------------------------------------------
+# LIKELIHOOD SETUP (gtlike)
+# ---------------------------------------------------------------------
+
 gtlike:
-  # IRFs
-  edisp : True
-  irfs : 'P8R3_SOURCE_V3'
-  edisp_disable : ['isodiff','galdiff']
+  edisp: True
+  # Enable energy dispersion correction.
 
-  # Settings for ROI model
+  irfs: 'P8R3_SOURCE_V3'
+  # Instrument Response Functions.
+
+  edisp_disable: ['isodiff', 'galdiff']
+  # Disable edisp for listed sources/components.
+
+
+# ---------------------------------------------------------------------
+# SOURCE + DIFFUSE MODEL
+# ---------------------------------------------------------------------
+
 model:
+  src_radius: 15.0
+  # Include catalog sources within this radius (deg) of ROI center.
 
-  # Include catalog sources within this distance from the ROI center
-  src_radius  : 10 
+  galdiff: '$FERMI_DIFFUSE_DIR/gll_iem_v07.fits'
+  # Galactic diffuse emission model.
 
-  # Include catalog sources within a box of width roisrc.
-  #src_roiwidth : 20 #15.0
+  isodiff: '$FERMI_DIFFUSE_DIR/iso_P8R3_SOURCE_V3_v1.txt'
+  # Isotropic diffuse template.
 
-  galdiff  : '$FERMI_DIFFUSE_DIR/gll_iem_v07.fits'
-  isodiff  : '$FERMI_DIFFUSE_DIR/iso_P8R3_SOURCE_V3_v1.txt'
-
-  # List of catalogs to be used in the model.
-  catalogs : 
+  catalogs:
     - 'gll_psc_v32.fit'
+  # Catalog(s) used to build the ROI source model.
+  # Download new versions from: https://fermi.gsfc.nasa.gov/ssc/data/access/lat/14yr_catalog/
+
+
+# ---------------------------------------------------------------------
+# OUTPUT / FILE MANAGEMENT
+# ---------------------------------------------------------------------
 
 fileio:
-  # File I/O
-  outdir : 'output'
+  outdir: 'output'
+  # Root output directory for generated files.
+
+
+# ---------------------------------------------------------------------
+# MULTI-COMPONENT ANALYSIS
+# ---------------------------------------------------------------------
 
 components: null
+# If null, run a single-component likelihood analysis.
+# If set to a list, each entry defines a separate component for SummedLikelihood.

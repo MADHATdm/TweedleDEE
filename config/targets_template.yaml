@@ -1,0 +1,27 @@
+# Target Sky Locations Definitions
+# ================================
+# This file defines the sky locations to analyze.
+# Each entry is a location with its coordinates and metadata.
+#
+# Structure:
+#   SkyLocationName:
+#     title: Display Name
+#     ra: Right Ascension (degrees, 0-360)
+#     dec: Declination (degrees, -90 to +90)
+#
+# USAGE:
+#   - Copy/rename to *.yaml
+#   - Add your sky locations with correct coordinates
+#   - Reference in command line: python tweedleDEE.py -d SkyLocationName
+
+# Example Sky Locations from Fermi catalog
+
+  region_1:
+    title:        'Region_1'
+    ra:           123.45
+    dec:          -67.89
+
+  region_2:
+    title:        'Region_2'
+    ra:           234.56
+    dec:          -78.90
