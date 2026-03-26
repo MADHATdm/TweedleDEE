@@ -2,13 +2,14 @@ channels:
   - conda-forge
   - fermi
 dependencies:
-  - python>=3.9
-  - fermipy
-  - fermitools>=2.2.0
+  - python~=3.11.11
+  - fermipy~=1.4
+  - fermitools~=2.4.0
   - healpy
   - gammapy
-  - numpy=1.26.4
-  - astropy=5.3.4
-  - pyyaml=6.0.1
-  - requests=2.32.3
+  - numpy~=1.26.4
+  - astropy~=7.0.1
+  - pyyaml~=6.0.1
+  - requests~=2.32.3
+  - scipy~=1.13.1
 name: tweedleDEE

@@ -1,11 +1,49 @@
-output/
-input/
+# Byte-compiled files
 __pycache__/
 
-*.txt
+# Virtual environments
+env/
+venv/
+.venv/
+
+# Pytest
+.pytest_cache/
+
+# IDEs / Editors
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Logs, output, shell scripts
 *.log
+*.out
+*.sh
+
+# Generated data & plots
+input/
+output/
+plots/
+journal/
+blanksky/
+data/
+subhalo/
+
+*.dat
 *.csv
-*.py
+*.png
 *.fit
 *.fits
-*.yaml
+*.txt
+
+# Not required helper files
+misc_helper.py
+plot_helper.py
+dist_plot.py
+fermiWebScrap.py
+move_files.py
+rm_files.py
+fermiDataDownload.py
+plot_logl.py
+TweedleDEE.wiki/

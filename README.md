@@ -19,13 +19,11 @@ TweedleDEE produces a background PMF file for the ROI as well as a file containi
 
 #### TweedleDEE Wiki Contents:
 - [Home](https://github.com/MADHATdm/TweedleDEE/wiki)
-- [1. Installing TweedleDEE Dependencies](https://github.com/MADHATdm/TweedleDEE/wiki/Installing-TweedleDEE-Dependencies)
-- [2. Fermi-LAT Data Queries](https://github.com/MADHATdm/TweedleDEE/wiki/Fermi%E2%80%90LAT-Data-Queries)
-- [3. Running TweedleDEE](https://github.com/MADHATdm/TweedleDEE/wiki/Running-TweedleDEE)
-- [4. Output Formatting](https://github.com/MADHATdm/TweedleDEE/wiki/Output-Formatting)
+- [1. Installing TweedleDEE Dependencies](https://github.com/MADHATdm/TweedleDEE/wiki/1.-Installing-TweedleDEE-Dependencies)
+- [2. Fermi-LAT Data Queries](https://github.com/MADHATdm/TweedleDEE/wiki/2.-Fermi%E2%80%90LAT-Data-Queries)
+- [2.5 Configuration Setup](https://github.com/MADHATdm/TweedleDEE/wiki/2.5-Configuration-Setup)
+- [3. Running TweedleDEE](https://github.com/MADHATdm/TweedleDEE/wiki/3.-Running-TweedleDEE)
+- [4. Output Formatting](https://github.com/MADHATdm/TweedleDEE/wiki/4.-Output-Formatting)
 
 If you use TweedleDEE please cite: 
 [Hoskinson, Kumar & Sandick (2024)](https://arxiv.org/abs/2408.04611)
-
-
-*Note: This repo is under construction.*

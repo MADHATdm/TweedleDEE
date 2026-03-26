@@ -1,0 +1,76 @@
+# TweedleDEE PMF Analysis Configuration
+# ======================================
+# This file configures the Probability Mass Function (PMF) background model
+# analysis for gamma-ray sky location searches.
+#
+# USAGE:
+#   - Adjust parameters for your analysis
+#   - Reference in command line (if applicable): python tweedleDEE.py -c td_config.yaml
+
+# ─────────────────────────────────────────────────────────────────────────
+# SPATIAL PARAMETERS (Region sizes in degrees)
+# ─────────────────────────────────────────────────────────────────────────
+
+nsample: 1_000_000
+  # Number of background sample ROIs to generate and test
+  # Higher values = better statistics, longer computation
+  # Plotting only works for ~10,000
+
+target_size: 10.0
+  # Radius of the target region in degrees
+
+sample_size: 0.5
+  # Radius of each background sample ROI in degrees
+
+source_size: 0.8
+  # Exclusion radius around point sources in degrees
+  # Sample ROIs within this distance are rejected to avoid contamination
+
+# ─────────────────────────────────────────────────────────────────────────
+# ENERGY BINNING
+# ─────────────────────────────────────────────────────────────────────────
+
+binning: 1
+  # Energy bin configuration:
+  #   1 = Logarithmic spacing (8 bins per decade, 16 total bins in 1-100 GeV)
+  #   0 = Single broad bin (1-100 GeV)
+
+# ─────────────────────────────────────────────────────────────────────────
+# FILE PATHS
+# ─────────────────────────────────────────────────────────────────────────
+
+# Relative paths are interpreted from the project root.
+# Runtime precedence for PMF sky-location files:
+#   1) CLI --output-dir/-o (if provided)
+#   2) paths.sky_location_files_dir below
+paths:
+  ids: 'PMFdata/IDs_updated.tsv'
+  source_catalog: 'gll_psc_v32.fit' # Download new versions from: https://fermi.gsfc.nasa.gov/ssc/data/access/lat/14yr_catalog/
+  sky_location_files_dir: 'output/'
+
+# ─────────────────────────────────────────────────────────────────────────
+# DEFAULT SKY LOCATION SOURCES FOR DWARF GALAXIES
+# ─────────────────────────────────────────────────────────────────────────
+
+defaults: False
+  # Use predefined dwarf positions from https://github.com/fermiPy/dmsky/tree/master/dmsky/data/targets/dwarfs
+  #   True  = Use default dwarfs (pre-defined)
+  #   False = Use custom targets from config/targets.yaml
+  # Typical: False (use your own targets)
+
+year: 2023
+  # Year for default dwarf catalog (if defaults: True)
+  # Used to fetch dwarf positions from:
+  # https://github.com/fermipy/dmsky/tree/master/dmsky/data/targets/dwarfs/
+  # Options: 2023, 2024 (check GitHub for latest)
+  # Only used if defaults: True
+
+# ─────────────────────────────────────────────────────────────────────────
+# ANALYSIS OPTIONS
+# ─────────────────────────────────────────────────────────────────────────
+
+run_likelihood: False
+  # Compute extended likelihood calculations and Fermi background analysis
+  #   True  = Run Fermi background ROI fit, compute BIC/AIC metrics (slower, requires GTAnalysis)
+  #   False = Skip likelihood analysis, only generate PMF (faster, default)
+  # Typical: False for initial PMF generation, True for detailed analysis
