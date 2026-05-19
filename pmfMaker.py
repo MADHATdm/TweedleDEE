@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 
 from configSetup import get_catalogs
 
+logger = logging.getLogger(__name__)
+
 @dataclass
 class PMFConfig:
     """Configuration for PMF background analysis."""
@@ -23,6 +25,7 @@ class PMFConfig:
     sample_size: float = 0.5   # degrees
     source_size: float = 0.8   # degrees
     binning: int = 1
+    sample_chunk_size: int | None = 5000
     
     # File paths
     ids_filepath: str = 'PMFdata/IDs_updated.tsv'
@@ -147,12 +150,13 @@ class BgdModelAnalysis:
         None
         """
         self.config = config
-        self.nsample = config.nsample
+        self.nsample = int(config.nsample)
         self.target_size = config.target_size
         self.sample_size = config.sample_size
         self.source_size = config.source_size
         self.energy_bins = config.energy_bins
         self.bpd = config.bpd
+        self.sample_chunk_size = int(config.sample_chunk_size) if config.sample_chunk_size else None
         self.sky_location_files_dir = sky_location_files_dir or config.sky_location_files_dir
         self.ids_filepath = config.ids_filepath
         self.source_info_filepath = config.source_info_file
@@ -239,8 +243,8 @@ class BgdModelAnalysis:
             raise FDError(f'No such target file {target_info_filepath}.')
         ra = fits.getval(target_info_filepath, target_RA_header)
         dec = fits.getval(target_info_filepath, target_DEC_header)
-        print(f"Target {target} coordinates: RA={ra}, DEC={dec}")
-        print(f"Target {target} coordinates in galactic: {SkyCoord(ra=ra, dec=dec, unit='deg', frame='icrs').galactic}")
+        # print(f"Target {target} coordinates: RA={ra}, DEC={dec}")
+        # print(f"Target {target} coordinates in galactic: {SkyCoord(ra=ra, dec=dec, unit='deg', frame='icrs').galactic}")
 
         if asArray:
             ra = [ra]
@@ -495,6 +499,33 @@ class BgdModelAnalysis:
         pmf_bins = bins_sample
 
         return pmf_hist, pmf_bins, hist_event
+
+    def _count_events_per_sample_roi(self, pruned_sample: SkyCoord, event_coords: SkyCoord) -> np.ndarray:
+        """Count photons in each accepted Sample ROI, optionally chunking the sky search."""
+        nsample = len(pruned_sample)
+
+        if not self.sample_chunk_size or nsample <= self.sample_chunk_size:
+            idx_sample, idx_event, d2d, d3d = event_coords.search_around_sky(
+                pruned_sample, self.sample_size * u.deg
+            )
+
+            return np.bincount(idx_sample, minlength=nsample)
+
+        hist_event = np.zeros(nsample, dtype=np.int64)
+        n_chunks = (nsample + self.sample_chunk_size - 1) // self.sample_chunk_size
+
+        for chunk_index, start in enumerate(range(0, nsample, self.sample_chunk_size), start=1):
+            stop = min(start + self.sample_chunk_size, nsample)
+            chunk = pruned_sample[start:stop]
+
+            idx_sample, idx_event, d2d, d3d = event_coords.search_around_sky(
+                chunk, self.sample_size * u.deg
+            )
+
+
+            hist_event[start:stop] = np.bincount(idx_sample, minlength=len(chunk))
+
+        return hist_event
 
     def create_PMF(self, target: str, energy_bin_number: int, make_plots: bool = False) -> tuple[PMFResults, LikelihoodResults]:
         """Generate PMF background models and compute likelihoods.
@@ -958,7 +989,8 @@ class PlotSkyRegion:
             plt.grid()
             plt.tight_layout()
             plot_name = plot_data[key]['name']
-            plt.savefig(f"{outdir}/{target}_{plot_name}_cmap_40.png", dpi=300)
+            plt.savefig(f"{outdir}/{target}_{plot_name}_cmap.png", dpi=300)
+            print(f'Plot saved: {outdir}/{target}_{plot_name}_cmap.png')
             plt.close()
 
         fig_combined, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(24,6), dpi=150)
@@ -991,7 +1023,8 @@ class PlotSkyRegion:
             ax.legend()
             ax.grid()
         plt.tight_layout()
-        plt.savefig(f'{outdir}/{target}_combined_cmap_40.png', dpi=300)
+        plt.savefig(f'{outdir}/{target}_combined_cmap.png', dpi=300)
+        print(f'Combined plot saved: {outdir}/{target}_combined_cmap.png')
         plt.close()
 
     def _prepare_plot_data(self, target: str, target_coords: SkyCoord, source_coords: SkyCoord, sample_coords: SkyCoord, pruned_coords: SkyCoord, event_coords: SkyCoord, extended: list[SkyCoord]) -> dict:

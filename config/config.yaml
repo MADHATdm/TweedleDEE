@@ -62,10 +62,10 @@ binning:
 
 selection:
   # gtselect parameters
-  emin: 1000
+  emin: 500
   # Minimum energy in MeV.
 
-  emax: 100000
+  emax: 1000000
   # Maximum energy in MeV.
 
   zmax: 90

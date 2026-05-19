@@ -11,7 +11,7 @@
 # SPATIAL PARAMETERS (Region sizes in degrees)
 # ─────────────────────────────────────────────────────────────────────────
 
-nsample: 1_000_000
+nsample: 100_000
   # Number of background sample ROIs to generate and test
   # Higher values = better statistics, longer computation
   # Plotting only works for ~10,000
@@ -25,6 +25,11 @@ sample_size: 0.5
 source_size: 0.8
   # Exclusion radius around point sources in degrees
   # Sample ROIs within this distance are rejected to avoid contamination
+
+sample_chunk_size: Null
+  # Number of accepted Sample ROIs to process per sky-match chunk
+  # Smaller values reduce peak memory during PMF generation, but can increase runtime
+  # Set to null to disable chunking and use the original all-at-once search
 
 # ─────────────────────────────────────────────────────────────────────────
 # ENERGY BINNING

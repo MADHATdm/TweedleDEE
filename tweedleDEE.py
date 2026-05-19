@@ -63,6 +63,9 @@ def main(args: argparse.Namespace) -> None:
         logger.info(f"Configuring input files for {sky_location}...")
         configure_input_files(catalog=td_config.source_info_file, defaults=td_config.defaults, year=td_config.year, input_dir=input_dir, output_dir=output_dir, targets_file=targets_file)
 
+    # Run GTAnalysis setup to create files for the PMF analysis
+    gta = runGTA(sky_location, input_dir)
+
     # Core PMF analysis workflow
     pmf = BgdModelAnalysis(td_config, sky_location_files_dir=output_dir)
     pmf_results, like_results = pmf.generate_PMF(sky_location)
@@ -307,7 +310,7 @@ def runGTA(sky_location: str, input_dir: str) -> GTAnalysis:
     GTAnalysis
         Initialized and setup GTAnalysis object ready for ROI analysis.
     """
-    gta = GTAnalysis(f'{input_dir}/{sky_location}/{sky_location}.yaml',logging={'verbosity': 3})
+    gta = GTAnalysis(f'{input_dir}/{sky_location}.yaml',logging={'verbosity': 3})
     gta.setup()
     gta.write_roi(f'roi_{sky_location}.fits')
 

@@ -1,5 +1,10 @@
 # tweedleDEE Changelog
 
+## [1.1.1] 2026-05-19
+
+### Added
+- Optional `sample_chunk_size` setting in `config/td_config.yaml` for chunked PMF sky matching to reduce peak memory use 
+
 ## [1.1] 2026-03-26
 
 ### Added

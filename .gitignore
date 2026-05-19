@@ -29,6 +29,9 @@ journal/
 blanksky/
 data/
 subhalo/
+docs/
+ZENODO_FILES/
+.scratch/
 
 *.dat
 *.csv
@@ -36,6 +39,7 @@ subhalo/
 *.fit
 *.fits
 *.txt
+*.md
 
 # Not required helper files
 misc_helper.py
@@ -47,3 +51,5 @@ rm_files.py
 fermiDataDownload.py
 plot_logl.py
 TweedleDEE.wiki/
+galdiff_templates.py
+dm_fit.py
